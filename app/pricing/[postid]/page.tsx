@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 
 // Components
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
+import { ThumbsUp } from 'lucide-react';
+import { ThumbsDown } from 'lucide-react';
+import { Eye } from 'lucide-react';
 
 
 
@@ -42,29 +45,17 @@ const [details, setDetails] = useState<any>({});
       <CardBody>
       <h1 className='text-xl text-center'>{details.id} : {details.title}</h1>
       <div className="">
-        <p className='text-left'>Post body : {details.body}</p>
-        <p className='text-left'>Post tags : {details.tags + ", "}</p>
-        <p className='text-left'>Post views : {details.views}</p>
-        <p className='text-left'>Post likes : {details.reactions?.likes}</p>
-        <p className='text-left'>Post dislikes : {details.reactions?.dislikes}</p>
-        <p className='text-left'>Post userId : {details.userId}</p>
+        <p className='text-left m-2'>Post userId : {details.userId}</p>
+        <p className='text-center m-2'> {details.body}</p>
+        <div className='flex justify-between p-5 cursor-pointer'>
+        <p className='text-left'><Eye className='text-yellow-500' />{details.views}</p>
+        <p className='text-left'><ThumbsUp className='text-danger' /> {details.reactions?.likes}</p>
+        <p className='text-left'><ThumbsDown className='text-blue-600' /> {details.reactions?.dislikes}</p>
+        </div>
+        
       </div>
       </CardBody>
     </Card>
-    {/* <div>
-      <h1 className='text-2xl text-center'>Title : {details.title}</h1>
-      <br />
-      <div className="">
-        <h1 className='text-left'>Post id : {details.id}</h1>
-        <p className='text-left'>Post body : {details.body}</p>
-        <p className='text-left'>Post tags : {details.tags + ", "}</p>
-        <p className='text-left'>Post views : {details.views}</p>
-        <p className='text-left'>Post likes : {details.reactions?.likes}</p>
-        <p className='text-left'>Post dislikes : {details.reactions?.dislikes}</p>
-        <p className='text-left'>Post userId : {details.userId}</p>
-
-      </div>
-    </div> */}
     </>
   )
 }
