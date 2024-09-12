@@ -10,12 +10,16 @@ import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 import {Button, ButtonGroup} from "@nextui-org/button";
 import { Eye } from "lucide-react";
 import { Heart } from "lucide-react";
-export default function PricingPage() {
+import Loading from "@/components/InfiniteScrolling/Loading";
+
+
+export default function infinteScrolling() {
 
   const [posts, setPosts] = useState<any>([]);
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
 
 
    const getposts = async () =>{
@@ -23,24 +27,41 @@ export default function PricingPage() {
             const res = await axios(`https://dummyjson.com/posts?limit=${limit}&skip=${skip}`);
             // console.log();
             setTotal(res.data.total);
-            setPosts(res.data.posts);
+            setPosts((res.data.posts));
+            setLoading(false);
             // console.log(res.data);
         }catch(e){
             console.log(e);
         }
     };
 
+    const scrollHandler = async () =>{
+        // console.log("scrollHeight" + document.documentElement.scrollHeight);
+        // console.log("innerHeight" + window.innerHeight);
+        // console.log("scrollTo" + document.documentElement.scrollTop.toFixed());
+        try{
+            if (
+                window.innerHeight + document.documentElement.scrollTop + 1 >=
+                document.documentElement.scrollHeight
+              ) {
+                setLoading(true);
+                setSkip((prev) => prev + 10);
+              }
+            
+        }catch(e){
+            console.log(e);
+        }
+    }
+
     useEffect(()=>{
         getposts();
     },[skip]);
 
-    const nextHandler = () =>{
-      setSkip(skip + 10);
-    }   
+    useEffect(()=>{
+        window.addEventListener("scroll" , scrollHandler);
+        return () => window.removeEventListener("scroll", scrollHandler);
 
-    const prevHandler = () =>{
-      setSkip(skip - 10);
-    }
+    },[]);
 
   return (
     <div>
@@ -71,15 +92,16 @@ export default function PricingPage() {
             </Card>
             <br />
             <br />
+            
           </Link>
           ))}
-
+        {loading && <Loading />}
       </div>
       
-      <div className="w-[75vw] h-[10vh] flex gap-3 justify-center items-center">
+      {/* <div className=" w-[75vw] h-[10vh] flex gap-3 justify-center items-center">
         <Button isDisabled={skip <= 5 ? true : false}  variant="bordered" onClick={prevHandler} >Prev</Button>
         <Button isDisabled={skip >= (total - 10) ? true : false} variant="bordered" onClick={nextHandler}>Next</Button>
-      </div>
+      </div> */}
     </div>
   );
 }
